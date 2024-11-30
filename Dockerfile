@@ -13,6 +13,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD gunicorn app.wsgi:application --bind 0.0.0.0:8000
+CMD gunicorn hh_api.wsgi:application --bind 0.0.0.0:8000
 
 EXPOSE 8000
