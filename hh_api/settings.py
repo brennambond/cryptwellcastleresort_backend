@@ -12,11 +12,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
 WEBSITE_URL = ['*']
+
+CSRF_TRUSTED_ORIGINS = ['http://35.170.218.30',
+                        'https://hauntedhotel-backend-api.com',]
 
 AUTH_USER_MODEL = 'useraccount.User'
 
@@ -54,7 +57,8 @@ CORS_ALLOWED_ORIGINS = [
     'http://0.0.0.0:80',
     'http://0.0.0.0:3000',
     'http://0.0.0.0',
-    'http://0.0.0.0:1337'
+    'http://0.0.0.0:1337',
+    'https://hauntedhotel.vercel.app',
 ]
 
 CORS_TRUSTED_ORIGINS = [
@@ -62,7 +66,8 @@ CORS_TRUSTED_ORIGINS = [
     'http://0.0.0.0:80',
     'http://0.0.0.0:3000',
     'http://0.0.0.0',
-    'http://0.0.0.0:1337'
+    'http://0.0.0.0:1337',
+    'https://hauntedhotel.vercel.app',
 ]
 
 CORS_ORIGINS_WHITELIST = [
@@ -70,7 +75,8 @@ CORS_ORIGINS_WHITELIST = [
     'http://0.0.0.0:80',
     'http://0.0.0.0:3000',
     'http://0.0.0.0',
-    'http://0.0.0.0:1337'
+    'http://0.0.0.0:1337',
+    'https://hauntedhotel.vercel.app',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -150,11 +156,11 @@ ASGI_APPLICATION = 'hh_api.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'haunted_demo',
-        'USER': 'haunted',
-        'PASSWORD': 'NgB427Dm!',
-        'HOST': 'database-1.ctycquw2iais.us-east-1.rds.amazonaws.com',
-        'PORT': '5432',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER_NM'),
+        'PASSWORD': os.environ.get('DB_USER_PW'),
+        'HOST': os.environ.get('DB_IP'),
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
 

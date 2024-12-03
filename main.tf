@@ -117,7 +117,12 @@ resource "aws_instance" "web" {
 
     # Run the Docker image
     docker run -d -p 80:8000 \
-    --env SECRET_KEY=${var.secret_key} \
+    --env SECRET_KEY=pass1234 \
+    --env DB_NAME=hauntedhoteldb \
+    --env DB_USER_NM=brennam \
+    --env DB_USER_PW=pass1234 \
+    --env DB_IP=my-django-rds.ctycquw2iais.us-east-1.rds.amazonaws.com \
+    --env DB_PORT=5432 \
     992382840587.dkr.ecr.us-east-1.amazonaws.com/hh-api:latest
     EOF
 

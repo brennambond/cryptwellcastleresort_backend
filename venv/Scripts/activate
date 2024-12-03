@@ -67,3 +67,10 @@ fi
 if [ -n "${BASH:-}" -o -n "${ZSH_VERSION:-}" ] ; then
     hash -r 2> /dev/null
 fi
+
+export SECRET_KEY=pass1234
+export DB_NAME=hauntedhoteldb
+export DB_USER_NM=brennam
+export DB_USER_PW=pass1234
+export DB_IP=my-django-rds.ctycquw2iais.us-east-1.rds.amazonaws.com # Your DB on AWS console
+export DB_PORT=5432
