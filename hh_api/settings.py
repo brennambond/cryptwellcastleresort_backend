@@ -16,14 +16,15 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
+AUTH_USER_MODEL = 'useraccount.User'
+
+SITE_ID = 1
+
 WEBSITE_URL = ['*']
 
 CSRF_TRUSTED_ORIGINS = ['http://35.170.218.30',
                         'https://hauntedhotel-backend-api.com',]
 
-AUTH_USER_MODEL = 'useraccount.User'
-
-SITE_ID = 1
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
@@ -112,8 +113,9 @@ INSTALLED_APPS = [
 
     'storages',
 
-    'useraccount',
     'room',
+    'useraccount',
+
 ]
 
 MIDDLEWARE = [
