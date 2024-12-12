@@ -1,7 +1,7 @@
 import uuid
 
 from django.conf import settings
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager, AbstractUser
 from django.db import models
 
 
@@ -28,10 +28,12 @@ class CustomUserManager(UserManager):
         return self._create_user(name, email, password, **extra_fields)
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    username = None
+    first_name = None
+    last_name = None
     email = models.EmailField(unique=True)
-    name = models.CharField(max_length=255, blank=True, null=True)
     avatar = models.ImageField(upload_to='uploads/avatars')
 
     is_active = models.BooleanField(default=True)
@@ -43,9 +45,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['name',]
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
     def avatar_url(self):
         if self.avatar:
