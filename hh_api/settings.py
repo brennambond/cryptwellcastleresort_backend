@@ -23,7 +23,7 @@ SITE_ID = 1
 WEBSITE_URL = ['*']
 
 CSRF_TRUSTED_ORIGINS = ['http://35.170.218.30',
-                        'https://hauntedhotel-backend-api.com',]
+                        'https://hauntedhotel-backend-api.com', 'http://hauntedhotel-backend-api.com',]
 
 
 SIMPLE_JWT = {
@@ -60,6 +60,8 @@ CORS_ALLOWED_ORIGINS = [
     'http://0.0.0.0',
     'http://0.0.0.0:1337',
     'https://hauntedhotel.vercel.app',
+    'http://hauntedhotel.vercel.app',
+
 ]
 
 CORS_TRUSTED_ORIGINS = [
@@ -69,6 +71,7 @@ CORS_TRUSTED_ORIGINS = [
     'http://0.0.0.0',
     'http://0.0.0.0:1337',
     'https://hauntedhotel.vercel.app',
+    'http://hauntedhotel.vercel.app',
 ]
 
 CORS_ORIGINS_WHITELIST = [
@@ -78,6 +81,7 @@ CORS_ORIGINS_WHITELIST = [
     'http://0.0.0.0',
     'http://0.0.0.0:1337',
     'https://hauntedhotel.vercel.app',
+    'http://hauntedhotel.vercel.app',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
