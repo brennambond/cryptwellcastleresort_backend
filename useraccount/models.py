@@ -31,8 +31,7 @@ class CustomUserManager(UserManager):
 class User(AbstractUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = None
-    first_name = None
-    last_name = None
+    name = None
     email = models.EmailField(unique=True)
     avatar = models.ImageField(upload_to='uploads/avatars')
 
