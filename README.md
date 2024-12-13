@@ -1,7 +1,7 @@
 # The Cryptwell Castle Resort - Backend
 
 ## Project Overview
-The Cryptwell Castle Resort backend serves as the backbone of the application, managing all critical data operations and providing a seamless API for the frontend. It handles:
+The Cryptwell Castle Resort backend serves as the backbone of the application, managing all critical data operations and providing a seamless API for the frontend, which can be found here: https://github.com/brennambond/cryptwellcastleresort_frontend. It handles:
 - User authentication and management.
 - Room and reservation data.
 - Integration with a PostgreSQL database hosted on AWS.
