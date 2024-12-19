@@ -29,8 +29,9 @@ CSRF_TRUSTED_ORIGINS = ['http://35.170.218.30',
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "ROTATE_REFRESH_TOKEN": False,
-    "BLACKLIST_AFTER_ROTATION": False,
+    "ROTATE_REFRESH_TOKEN": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
     "UPDATE_LAST_LOGIN": True,
     "SIGNIN_KEY": 'acomplexkey',
     "ALGORITHM": "HS512",
@@ -58,11 +59,22 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Cryptwell Castle Resort',
+    'DESCRIPTION': 'Hotel Booking API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
+
+CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
     'http://0.0.0.0:8000',
     'http://0.0.0.0:80',
     'http://0.0.0.0:3000',
@@ -74,6 +86,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
     'http://0.0.0.0:8000',
     'http://0.0.0.0:80',
     'http://0.0.0.0:3000',
@@ -114,6 +127,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+
 
     'allauth',
     'allauth.account',
@@ -121,6 +136,7 @@ INSTALLED_APPS = [
 
     'dj_rest_auth',
     'dj_rest_auth.registration',
+    'drf_spectacular',
 
     'corsheaders',
 
@@ -128,6 +144,7 @@ INSTALLED_APPS = [
 
     'room',
     'useraccount',
+    'reservations',
 
 ]
 

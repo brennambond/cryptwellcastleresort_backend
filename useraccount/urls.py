@@ -1,17 +1,13 @@
 from django.urls import path
-
-from dj_rest_auth.jwt_auth import get_refresh_view
-from dj_rest_auth.registration.views import RegisterView
-from dj_rest_auth.views import LoginView, LogoutView, UserDetailsView
-from rest_framework_simplejwt.views import TokenVerifyView
-
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from . import api
 
 urlpatterns = [
-    path('register/', RegisterView.as_view(), name='rest_register'),
-    path('login/', LoginView.as_view(), name='rest_login'),
-    path('logout/', LogoutView.as_view(), name='rest_logout'),
-    path('token/refresh/', get_refresh_view().as_view(), name='token_refresh'),
-    path('myreservations/', api.reservations_list, name='api_reservations_list'),
-    path('<uuid:pk>/', api.user_detail, name='api_user_detail'),
+    path('<uuid:pk>/', api.user_detail, name='user_detail'),
+    path('auth/user/', api.get_current_user, name='get_current_user'),
+    path('auth/login/', api.login_user, name='login_user'),
+    path("auth/logout/", api.logout_user, name="logout"),
+    path('auth/register/', api.register_user, name='register_user'),
+    path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
