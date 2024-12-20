@@ -1,9 +1,7 @@
 from django.urls import path
-from . import views
+from . import api
 
 urlpatterns = [
-    path('reservations/', views.list_user_reservations,
-         name='list_user_reservations'),
-    path('reservations/<str:room_id>/book/',
-         views.create_reservation, name='create_reservation'),
+    path('', api.list_user_reservations, name='list_user_reservations'),
+    path('create/', api.create_reservation, name='create_reservation'),
 ]

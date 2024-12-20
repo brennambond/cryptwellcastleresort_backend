@@ -9,9 +9,6 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from django.apps import apps
-print(apps.get_models())
-
 
 urlpatterns = [
     path('api/auth/', include('useraccount.urls')),

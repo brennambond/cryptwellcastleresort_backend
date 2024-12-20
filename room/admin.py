@@ -1,24 +1,22 @@
 from django.contrib import admin
-from .models import Room, Wing, Category
-
-# Register your models here.
-
-
-@admin.register(Room)
-class RoomAdmin(admin.ModelAdmin):
-    list_display = ('title', 'wing', 'category',
-                    'price_per_night', 'guests', 'availability_status')
-    list_filter = ('wing', 'category', 'availability_status')
-    search_fields = ('title',)
+from .models import Wing, Category, Room
 
 
 @admin.register(Wing)
 class WingAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description')
+    list_display = ('id', 'name', 'description')
     search_fields = ('name',)
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('id', 'name', 'description')
     search_fields = ('name',)
+
+
+@admin.register(Room)
+class RoomAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'price_per_night',
+                    'wing', 'category', 'created_at')
+    list_filter = ('wing', 'category')
+    search_fields = ('title', 'description')
