@@ -34,7 +34,7 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
     "UPDATE_LAST_LOGIN": True,
     "SIGNIN_KEY": 'acomplexkey',
-    "ALGORITHM": "HS512",
+    'ALGORITHM': 'HS256',
 }
 
 SESSION_COOKIE_SECURE = True
