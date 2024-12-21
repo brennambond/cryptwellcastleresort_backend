@@ -4,7 +4,7 @@ from .models import Reservation
 
 @admin.register(Reservation)
 class ReservationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'room', 'start_date',
-                    'end_date', 'created_at')
-    list_filter = ('start_date', 'end_date', 'room')
+    list_display = ('id', 'user', 'room', 'check_in',
+                    'check_out', 'guests', 'created_at')
+    list_filter = ('check_in', 'check_out', 'room')
     search_fields = ('user__email', 'room__title')
