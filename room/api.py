@@ -8,7 +8,6 @@ from django.shortcuts import get_object_or_404
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def list_rooms(request):
     rooms = Room.objects.all()
     serializer = RoomSerializer(rooms, many=True)
@@ -16,7 +15,6 @@ def list_rooms(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def get_room_detail(request, room_id):
     room = get_object_or_404(Room, id=room_id)
     serializer = RoomSerializer(room)
@@ -24,7 +22,6 @@ def get_room_detail(request, room_id):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def list_wings(request):
     wings = Wing.objects.all()
     serializer = WingSerializer(wings, many=True)
@@ -32,7 +29,6 @@ def list_wings(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def get_wing_detail(request, wing_id):
     wing = get_object_or_404(Wing, id=wing_id)
     serializer = WingSerializer(wing)
