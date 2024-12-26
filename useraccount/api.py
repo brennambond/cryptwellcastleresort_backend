@@ -20,14 +20,23 @@ def user_detail(request):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def register_user(request):
     """
-    Register a new user.
+    Register a new user and return tokens.
     """
     serializer = UserRegistrationSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()
-        return Response(UserDetailSerializer(user).data, status=status.HTTP_201_CREATED)
+        # Generate tokens for the user
+        refresh = RefreshToken.for_user(user)
+        tokens = {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token)
+        }
+        # Return user details along with tokens
+        user_data = UserDetailSerializer(user).data
+        return Response({**user_data, **tokens}, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
