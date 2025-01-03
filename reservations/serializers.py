@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Reservation
 from room.serializers import RoomSerializer
+from datetime import datetime
 
 
 class ReservationSerializer(serializers.ModelSerializer):
@@ -15,6 +16,9 @@ class ReservationSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'user', 'created_at', 'updated_at']
 
     def get_room(self, obj):
+        """
+        Returns detailed room information.
+        """
         return {
             "id": obj.room.id,
             "title": obj.room.title,
@@ -25,3 +29,17 @@ class ReservationSerializer(serializers.ModelSerializer):
             "bathrooms": obj.room.bathrooms,
             "guests": obj.room.guests
         }
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['check_in'] = (
+            instance.check_in.strftime('%Y-%m-%d')
+            if isinstance(instance.check_in, datetime)
+            else instance.check_in
+        )
+        rep['check_out'] = (
+            instance.check_out.strftime('%Y-%m-%d')
+            if isinstance(instance.check_out, datetime)
+            else instance.check_out
+        )
+        return rep
