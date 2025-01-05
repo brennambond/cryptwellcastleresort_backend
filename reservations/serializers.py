@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Reservation
 from room.serializers import RoomSerializer
 from datetime import datetime
+from room.serializers import WingSerializer
 
 
 class ReservationSerializer(serializers.ModelSerializer):
@@ -11,14 +12,16 @@ class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = [
-            'id', 'user', 'check_in', 'check_out', 'guests', 'room', 'created_at', 'updated_at'
+            'id', 'user', 'check_in', 'check_out', 'guests', 'total_price', 'room', 'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'user', 'created_at', 'updated_at']
 
     def get_room(self, obj):
         """
-        Returns detailed room information.
+        Returns detailed room information, including a serialized wing.
         """
+        wing_data = WingSerializer(
+            obj.room.wing).data  # Serialize the wing object
         return {
             "id": obj.room.id,
             "title": obj.room.title,
@@ -27,7 +30,8 @@ class ReservationSerializer(serializers.ModelSerializer):
             "beds": obj.room.beds,
             "bedrooms": obj.room.bedrooms,
             "bathrooms": obj.room.bathrooms,
-            "guests": obj.room.guests
+            "guests": obj.room.guests,
+            "wing": wing_data,  # Include serialized wing
         }
 
     def to_representation(self, instance):

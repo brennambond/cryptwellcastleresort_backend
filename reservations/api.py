@@ -42,10 +42,11 @@ def create_reservation(request):
     check_in = data.get('check_in')
     check_out = data.get('check_out')
     guests = data.get('guests', 1)
+    total_price = data.get('total_price', 0.00)
 
     try:
         # Validate required fields
-        if not all([check_in, check_out, room_id]) or int(guests) <= 0:
+        if not all([check_in, check_out, room_id, total_price]) or int(guests) <= 0:
             return Response({"error": "Missing or invalid required fields."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Validate dates
@@ -61,7 +62,8 @@ def create_reservation(request):
                 room=room,
                 check_in=check_in,
                 check_out=check_out,
-                guests=guests
+                guests=guests,
+                total_price=total_price,
             )
         except IntegrityError:
             return Response({"error": "A reservation already exists for this room and date range."}, status=status.HTTP_400_BAD_REQUEST)
