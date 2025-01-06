@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework import status
 from .models import Room, Wing
 from reservations.models import Reservation  # Corrected import
@@ -46,41 +46,6 @@ def list_rooms(request):
 
 
 @api_view(['GET'])
-def list_rooms(request):
-    """
-    List all rooms or filter based on query parameters.
-    """
-    rooms = Room.objects.all()
-
-    # Apply filtering
-    guests = request.query_params.get('guests')
-    beds = request.query_params.get('beds')
-    bedrooms = request.query_params.get('bedrooms')
-    bathrooms = request.query_params.get('bathrooms')
-    check_in = request.query_params.get('checkIn')
-    check_out = request.query_params.get('checkOut')
-
-    if guests:
-        rooms = rooms.filter(guests__gte=int(guests))
-    if beds:
-        rooms = rooms.filter(beds__gte=int(beds))
-    if bedrooms:
-        rooms = rooms.filter(bedrooms__gte=int(bedrooms))
-    if bathrooms:
-        rooms = rooms.filter(bathrooms__gte=int(bathrooms))
-
-    # Check for availability based on reservations
-    if check_in and check_out:
-        reservations = Reservation.objects.filter(
-            Q(check_in__lte=check_out) & Q(check_out__gte=check_in)
-        ).values_list('room_id', flat=True)
-        rooms = rooms.exclude(id__in=reservations)
-
-    serializer = RoomSerializer(rooms, many=True)
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
 def get_room_detail(request, room_id):
     room = get_object_or_404(Room, id=room_id)
     serializer = RoomSerializer(room)
@@ -88,6 +53,7 @@ def get_room_detail(request, room_id):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def list_wings(request):
     wings = Wing.objects.all()
     serializer = WingSerializer(wings, many=True)
