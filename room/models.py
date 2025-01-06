@@ -56,12 +56,20 @@ class Room(models.Model):
         bucket_domain = os.getenv(
             "AWS_S3_CUSTOM_DOMAIN", "hauntedhotel-backend-bucket.s3.amazonaws.com"
         )
-        if self.image:
-            print(f"Image name: {self.image.name}")  # Debugging
-            if self.image.name != "uploads/default-room.png":
-                self.image_url = f"https://{bucket_domain}/{self.image.name}"
-            else:
-                self.image_url = None
+        print(f"Bucket Domain: {bucket_domain}")  # Debugging bucket domain
+
+        if self.image and self.image.name:
+            # Debugging image name
+            print(
+                f"Constructing image_url for {self.title}: {self.image.name}")
+            self.image_url = f"https://{bucket_domain}/{self.image.name}"
+        else:
+            # Debugging missing image
+            print(f"No image found for {self.title}, using None for image_url")
+            self.image_url = None
+
+        # Debugging final result
+        print(f"Final image_url for {self.title}: {self.image_url}")
         super().save(*args, **kwargs)
 
     def __str__(self):
