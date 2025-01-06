@@ -20,7 +20,7 @@ AUTH_USER_MODEL = 'useraccount.User'
 
 SITE_ID = 1
 
-WEBSITE_URL = ['*']
+WEBSITE_URL = os.getenv("WEBSITE_URL", "http://localhost:8000")
 
 CSRF_TRUSTED_ORIGINS = ['http://35.170.218.30',
                         'https://hauntedhotel-backend-api.com', 'http://hauntedhotel-backend-api.com',]
@@ -248,7 +248,10 @@ AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SAK')
 
 AWS_STORAGE_BUCKET_NAME = os.environ.get(
     'AWS_SBN', "hauntedhotel-backend-bucket")
+print("AWS_STORAGE_BUCKET_NAME:", AWS_STORAGE_BUCKET_NAME)
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+print("AWS_S3_CUSTOM_DOMAIN:", AWS_S3_CUSTOM_DOMAIN)
+
 AWS_S3_FILE_OVERWRITE = True
 
 STORAGES = {
