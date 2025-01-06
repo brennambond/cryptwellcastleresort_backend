@@ -16,7 +16,7 @@ class Wing(models.Model):
         # Dynamically construct the image_url
         if self.image_url:
             bucket_domain = os.getenv(
-                "AWS_S3_CUSTOM_DOMAIN", "hauntedhotel-backend-bucket.s3.amazonaws.com"
+                "AWS_S3_CUSTOM_DOMAIN", "hauntedhotel-backend-bucket.s3.us-east-1.amazonaws.com"
             )
             self.image_url_full = f"https://{bucket_domain}/{self.image_url.name}"
         super().save(*args, **kwargs)
@@ -54,7 +54,7 @@ class Room(models.Model):
 
     def save(self, *args, **kwargs):
         bucket_domain = os.getenv(
-            "AWS_S3_CUSTOM_DOMAIN", "hauntedhotel-backend-bucket.s3.amazonaws.com"
+            "AWS_S3_CUSTOM_DOMAIN", "hauntedhotel-backend-bucket.s3.us-east-1.amazonaws.com"
         )
         print(f"Bucket Domain: {bucket_domain}")  # Debugging bucket domain
 

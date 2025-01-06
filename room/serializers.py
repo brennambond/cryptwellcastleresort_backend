@@ -8,7 +8,7 @@ class WingSerializer(serializers.ModelSerializer):
 
     def get_image_url(self, obj):
         bucket_domain = os.getenv(
-            "AWS_S3_CUSTOM_DOMAIN", "hauntedhotel-backend-bucket.s3.amazonaws.com"
+            "AWS_S3_CUSTOM_DOMAIN", "hauntedhotel-backend-bucket.s3.us-east-1.amazonaws.com"
         )
         return f"https://{bucket_domain}/{obj.image_url.name}" if obj.image_url else None
 
@@ -22,7 +22,7 @@ class RoomSerializer(serializers.ModelSerializer):
 
     def get_image_url(self, obj):
         bucket_domain = os.getenv(
-            "AWS_S3_CUSTOM_DOMAIN", "hauntedhotel-backend-bucket.s3.amazonaws.com"
+            "AWS_S3_CUSTOM_DOMAIN", "hauntedhotel-backend-bucket.s3.us-east-1.amazonaws.com"
         )
         if obj.image and obj.image.name:
             image_url = f"https://{bucket_domain}/{obj.image.name}"
