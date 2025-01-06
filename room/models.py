@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.conf import settings
+import os
 
 
 class Wing(models.Model):
@@ -8,10 +9,17 @@ class Wing(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     image_url = models.ImageField(
-        upload_to='uploads/wings', null=True, blank=True)
+        upload_to='uploads/wings', default='uploads/default-wing.png', null=True, blank=True
+    )
 
-    def image_url_full(self):
-        return f"{settings.WEBSITE_URL}{self.image_url.url}" if self.image_url else None
+    def save(self, *args, **kwargs):
+        # Dynamically construct the image_url
+        if self.image_url:
+            bucket_domain = os.getenv(
+                "AWS_S3_CUSTOM_DOMAIN", "hauntedhotel-backend-bucket.s3.amazonaws.com"
+            )
+            self.image_url_full = f"https://{bucket_domain}/{self.image_url.name}"
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -35,16 +43,26 @@ class Room(models.Model):
     bedrooms = models.PositiveIntegerField(default=1)
     bathrooms = models.PositiveIntegerField(default=1)
     guests = models.PositiveIntegerField(default=1)
-    image_url = models.ImageField(
-        upload_to='uploads/rooms', null=True, blank=True)
+    image = models.ImageField(
+        upload_to="uploads/rooms/", default="uploads/default-room.png")
+    image_url = models.URLField(blank=True, null=True)
     wing = models.ForeignKey(
         Wing, on_delete=models.CASCADE, related_name='rooms')
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name='rooms')
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def image_url_full(self):
-        return f"{settings.WEBSITE_URL}{self.image_url.url}" if self.image_url else None
+    def save(self, *args, **kwargs):
+        bucket_domain = os.getenv(
+            "AWS_S3_CUSTOM_DOMAIN", "hauntedhotel-backend-bucket.s3.amazonaws.com"
+        )
+        if self.image:
+            print(f"Image name: {self.image.name}")  # Debugging
+            if self.image.name != "uploads/default-room.png":
+                self.image_url = f"https://{bucket_domain}/{self.image.name}"
+            else:
+                self.image_url = None
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title

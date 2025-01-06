@@ -7,15 +7,19 @@ from reservations.models import Reservation  # Corrected import
 from reservations.serializers import ReservationSerializer
 from .serializers import RoomSerializer, WingSerializer
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, F
 
 
 @api_view(['GET'])
 def list_rooms(request):
-    """
-    List all rooms or filter based on query parameters.
-    """
-    rooms = Room.objects.all()
+
+    rooms = Room.objects.annotate(
+        wing_priority=F('wing__name')
+    ).order_by(
+        '' 'wing_priority',
+        'price_per_night',
+        'title'
+    )
 
     # Apply filtering
     guests = request.query_params.get('guests')

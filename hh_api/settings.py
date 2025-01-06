@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -249,7 +249,7 @@ AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SAK')
 AWS_STORAGE_BUCKET_NAME = os.environ.get(
     'AWS_SBN', "hauntedhotel-backend-bucket")
 print("AWS_STORAGE_BUCKET_NAME:", AWS_STORAGE_BUCKET_NAME)
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
 print("AWS_S3_CUSTOM_DOMAIN:", AWS_S3_CUSTOM_DOMAIN)
 
 AWS_S3_FILE_OVERWRITE = True
