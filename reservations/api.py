@@ -8,6 +8,9 @@ from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from room.models import Room
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 def validate_dates(check_in, check_out):
     """
@@ -28,15 +31,14 @@ def validate_dates(check_in, check_out):
 @permission_classes([IsAuthenticated])
 def list_user_reservations(request):
     reservations = Reservation.objects.filter(user=request.user)
+    print(f"User: {request.user}, Reservations: {reservations}")
     serializer = ReservationSerializer(reservations, many=True)
     return Response(serializer.data)
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_reservation(request):
-    """
-    Create a new reservation for a user.
-    """
     data = request.data
     room_id = data.get('room')
     check_in = data.get('check_in')
@@ -45,17 +47,15 @@ def create_reservation(request):
     total_price = data.get('total_price', 0.00)
 
     try:
-        # Validate required fields
+        logger.info(f"Request data: {request.data}")
+        logger.info(f"Authenticated user: {request.user}")
         if not all([check_in, check_out, room_id, total_price]) or int(guests) <= 0:
             return Response({"error": "Missing or invalid required fields."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Validate dates
         validate_dates(check_in, check_out)
 
-        # Fetch the room
         room = get_object_or_404(Room, id=room_id)
 
-        # Create the reservation
         try:
             reservation = Reservation.objects.create(
                 user=request.user,
@@ -68,11 +68,12 @@ def create_reservation(request):
         except IntegrityError:
             return Response({"error": "A reservation already exists for this room and date range."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Serialize and return the reservation
         serializer = ReservationSerializer(reservation)
+        logger.info(f"Reservation created successfully: {serializer.data}")
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     except ValueError as e:
+        logger.error(f"Unexpected error: {e}", exc_info=True)
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         import logging
