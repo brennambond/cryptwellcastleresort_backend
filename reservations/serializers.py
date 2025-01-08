@@ -1,8 +1,7 @@
 from rest_framework import serializers
 from .models import Reservation
-from room.serializers import RoomSerializer
-from datetime import datetime
 from room.serializers import WingSerializer
+from datetime import datetime
 
 
 class ReservationSerializer(serializers.ModelSerializer):
@@ -17,22 +16,23 @@ class ReservationSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'user', 'created_at', 'updated_at']
 
     def get_room(self, obj):
-        """
-        Returns detailed room information, including a serialized wing.
-        """
-        wing_data = WingSerializer(
-            obj.room.wing).data  # Serialize the wing object
-        return {
-            "id": obj.room.id,
-            "title": obj.room.title,
-            "price_per_night": obj.room.price_per_night,
-            "image_url": obj.room.image_url.url if obj.room.image_url else None,
-            "beds": obj.room.beds,
-            "bedrooms": obj.room.bedrooms,
-            "bathrooms": obj.room.bathrooms,
-            "guests": obj.room.guests,
-            "wing": wing_data,  # Include serialized wing
-        }
+        try:
+            # Serialize the wing object
+            wing_data = WingSerializer(obj.room.wing).data
+            return {
+                "id": obj.room.id,
+                "title": obj.room.title,
+                "price_per_night": obj.room.price_per_night,
+                "image_url": obj.room.image_url,  # Use image_url directly
+                "beds": obj.room.beds,
+                "bedrooms": obj.room.bedrooms,
+                "bathrooms": obj.room.bathrooms,
+                "guests": obj.room.guests,
+                "wing": wing_data,  # Include serialized wing
+            }
+        except AttributeError as e:
+            raise serializers.ValidationError(
+                f"Error retrieving room data: {e}")
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)

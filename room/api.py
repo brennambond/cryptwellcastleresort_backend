@@ -9,6 +9,10 @@ from .serializers import RoomSerializer, WingSerializer
 from django.shortcuts import get_object_or_404
 from django.db.models import Q, F
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 @api_view(['GET'])
 def list_rooms(request):
@@ -72,17 +76,16 @@ def get_wing_detail(request, wing_id):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_room_reservations(request, room_id):
-    """
-    Get all reservations for a specific room.
-    """
-    room = get_object_or_404(Room, id=room_id)
-    reservations = Reservation.objects.filter(room=room)
-    data = [
-        {
-            "check_in": reservation.check_in,
-            "check_out": reservation.check_out,
-        }
-        for reservation in reservations
-    ]
-    return Response(data, status=status.HTTP_200_OK)
+    try:
+        room = get_object_or_404(Room, id=room_id)
+        reservations = Reservation.objects.filter(room=room)
+
+        logger.info(f"Fetched reservations for room {room_id}: {reservations}")
+        serializer = ReservationSerializer(reservations, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        logger.error(
+            f"Error fetching reservations for room {room_id}: {e}", exc_info=True)
+        return Response({"error": "An error occurred while fetching reservations."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
