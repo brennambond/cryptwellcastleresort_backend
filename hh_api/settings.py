@@ -12,9 +12,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    'localhost',                  # Allow local development
+    '127.0.0.1',                  # Allow IP-based access in local development
+    'hauntedhotel-backend-api.com',  # Your production backend domain
+    'www.hauntedhotel-backend-api.com',  # Add the 'www' subdomain if applicable
+]
+
 
 AUTH_USER_MODEL = 'useraccount.User'
 
@@ -23,7 +29,7 @@ SITE_ID = 1
 WEBSITE_URL = os.getenv("WEBSITE_URL", "http://localhost:8000")
 
 CSRF_TRUSTED_ORIGINS = ['http://35.170.218.30',
-                        'https://hauntedhotel-backend-api.com', 'http://hauntedhotel-backend-api.com',]
+                        'https://hauntedhotel-backend-api.com', 'http://hauntedhotel-backend-api.com', 'https://thecryptwellcastleresort.vercel.app',]
 
 
 SIMPLE_JWT = {
@@ -74,16 +80,11 @@ SPECTACULAR_SETTINGS = {
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    'http://0.0.0.0:8000',
-    'http://0.0.0.0:80',
-    'http://0.0.0.0:3000',
-    'http://0.0.0.0',
-    'http://0.0.0.0:1337',
-    'https://hauntedhotel.vercel.app',
-    'http://hauntedhotel.vercel.app',
-
+    "http://localhost:3000",                          # Local frontend
+    "https://thecryptwellcastleresort.vercel.app",    # Production frontend
+    "https://hauntedhotel-backend-api.com",           # Backend itself
 ]
+
 
 CORS_TRUSTED_ORIGINS = [
     "http://localhost:3000",
@@ -106,7 +107,6 @@ CORS_ORIGINS_WHITELIST = [
     'http://hauntedhotel.vercel.app',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
 
 REST_AUTH = {
     "USE_JWT": True,

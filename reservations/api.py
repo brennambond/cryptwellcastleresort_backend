@@ -71,7 +71,10 @@ def create_reservation(request):
         guests = data.get('guests', 1)
         total_price = data.get('total_price', 0.00)
 
+        logger.info(f"Request data: {data}")
+
         if not all([check_in, check_out, room_id, total_price]) or int(guests) <= 0:
+            logger.error("Missing or invalid required fields.")
             return Response({"error": "Missing or invalid required fields."}, status=status.HTTP_400_BAD_REQUEST)
 
         validate_dates(check_in, check_out)
@@ -88,9 +91,9 @@ def create_reservation(request):
         )
         serializer = ReservationSerializer(reservation)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    except IntegrityError:
-        return Response({"error": "A reservation already exists for this room and date range."}, status=status.HTTP_400_BAD_REQUEST)
+
     except Exception as e:
+        logger.error(f"Error during reservation creation: {e}", exc_info=True)
         return Response({"error": "An error occurred during reservation creation."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
