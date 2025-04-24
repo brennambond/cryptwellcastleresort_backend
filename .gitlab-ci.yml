@@ -1,0 +1,26 @@
+image: python:3.11
+
+services:
+  - postgres:14
+
+variables:
+  POSTGRES_DB: test_db
+  POSTGRES_USER: test_user
+  POSTGRES_PASSWORD: test_pass
+
+stages:
+  - test
+
+cache:
+  paths:
+    - .venv/
+
+test:
+  stage: test
+  before_script:
+    - python -m venv .venv
+    - source .venv/bin/activate
+    - pip install -r requirements.txt
+  script:
+    - python manage.py migrate
+    - pytest
