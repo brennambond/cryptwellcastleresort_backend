@@ -1,17 +1,31 @@
+image: python:3.11
+
+services:
+  - postgres:14
+
+variables:
+  POSTGRES_DB: test_db
+  POSTGRES_USER: test_user
+  POSTGRES_PASSWORD: test_pass
+  POSTGRES_HOST: localhost
+  DJANGO_SETTINGS_MODULE: hh_api.settings
+
+stages:
+  - test
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - venv/
+
 backend-tests:
   stage: test
-  image: python:3.11
-  services:
-    - postgres:14
-  variables:
-    POSTGRES_DB: test_db
-    POSTGRES_USER: test_user
-    POSTGRES_PASSWORD: test_pass
-    DJANGO_SETTINGS_MODULE: hh_api.settings
   before_script:
+    - apt-get update && apt-get install -y netcat
     - python -m venv venv
     - source venv/bin/activate
     - pip install -r requirements.txt
+    - until nc -z localhost 5432; do echo "Waiting for Postgres..."; sleep 1; done
   script:
     - python manage.py migrate
     - pytest --junitxml=pytest-report.xml
