@@ -7,7 +7,7 @@ variables:
   POSTGRES_DB: test_db
   POSTGRES_USER: test_user
   POSTGRES_PASSWORD: test_pass
-  POSTGRES_HOST: localhost
+  POSTGRES_HOST: postgres
   DJANGO_SETTINGS_MODULE: hh_api.settings
 
 stages:
@@ -25,7 +25,7 @@ backend-tests:
     - python -m venv venv
     - source venv/bin/activate
     - pip install -r requirements.txt
-    - until nc -z localhost 5432; do echo "Waiting for Postgres..."; sleep 1; done
+    - until nc -z postgres 5432; do echo "Waiting for Postgres..."; sleep 1; done
   script:
     - python manage.py migrate
     - pytest --junitxml=pytest-report.xml
