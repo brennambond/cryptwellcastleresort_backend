@@ -21,7 +21,7 @@ cache:
 backend-tests:
   stage: test
   before_script:
-    - apt-get update && apt-get install -y netcat
+    - apt-get update && apt-get install -y netcat-openbsd
     - python -m venv venv
     - source venv/bin/activate
     - pip install -r requirements.txt
