@@ -8,7 +8,11 @@ User = get_user_model()
 
 @pytest.mark.django_db
 def test_reservation_list_authenticated_user():
-    user = User.objects.create_user(username='testuser', password='testpass')
+    user = User.objects.create_user(
+        username='testuser',
+        email='testuser@example.com',  # ✅ New: email is provided
+        password='testpass'
+    )
 
     client = APIClient()
     client.force_authenticate(user=user)
