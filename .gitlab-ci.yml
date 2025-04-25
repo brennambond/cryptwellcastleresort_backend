@@ -23,8 +23,12 @@ backend-tests:
     - source .venv/bin/activate
     - pip install -r requirements.txt
   script:
+    - cd backend
+    - python -m venv venv
+    - source venv/bin/activate
+    - pip install -r requirements.txt
     - python manage.py migrate
-    - pytest --tb=short --junitxml=pytest-report.xml
+    - pytest -v
   artifacts:
     when: always
     reports:
