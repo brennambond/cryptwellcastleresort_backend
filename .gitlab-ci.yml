@@ -1,0 +1,33 @@
+image: python:3.11
+
+services:
+  - postgres:14
+
+variables:
+  POSTGRES_DB: test_db
+  POSTGRES_USER: test_user
+  POSTGRES_PASSWORD: test_pass
+  DJANGO_SETTINGS_MODULE: hh_api.settings
+
+stages:
+  - test
+
+cache:
+  paths:
+    - .venv/
+
+backend-tests:
+  stage: test
+  before_script:
+    - python -m venv .venv
+    - source .venv/bin/activate
+    - pip install -r requirements.txt
+  script:
+    - python manage.py migrate
+    - pytest --tb=short --junitxml=pytest-report.xml
+  artifacts:
+    when: always
+    reports:
+      junit: pytest-report.xml
+    paths:
+      - pytest-report.xml
