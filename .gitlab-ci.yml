@@ -20,14 +20,12 @@ cache:
 
 backend-tests:
   stage: test
-  before_script:
+  script:
     - apt-get update && apt-get install -y netcat-openbsd
     - python -m venv venv
     - source venv/bin/activate
     - pip install -r requirements.txt
     - until nc -z postgres 5432; do echo "Waiting for Postgres..."; sleep 1; done
-  script:
-    - source venv/bin/activate
     - python manage.py migrate
     - pytest --junitxml=pytest-report.xml
   artifacts:
