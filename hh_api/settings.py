@@ -188,11 +188,11 @@ ASGI_APPLICATION = 'hh_api.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER_NM'),
-        'PASSWORD': os.environ.get('DB_USER_PW'),
-        'HOST': os.environ.get('DB_IP'),
-        'PORT': os.environ.get('DB_PORT'),
+        'NAME': os.getenv('POSTGRES_DB', 'test_db'),
+        'USER': os.getenv('POSTGRES_USER', 'test_user'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'test_pass'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
 
