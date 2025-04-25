@@ -26,6 +26,7 @@ backend-tests:
     - source venv/bin/activate
     - pip install -r requirements.txt
     - pip install pytest
+    - pip install pytest-django
     - until nc -z postgres 5432; do echo "Waiting for Postgres..."; sleep 1; done
     - python manage.py migrate
     - export PYTHONPATH="${PYTHONPATH}:$(pwd)"
