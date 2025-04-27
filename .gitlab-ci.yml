@@ -21,19 +21,20 @@ cache:
 backend-tests:
   stage: test
   script:
-    - apt-get update && apt-get install -y netcat-openbsd
+    - apt-get update && apt-get install -y netcat-openbsd curl
     - python -m venv venv
     - source venv/bin/activate
     - pip install -r requirements.txt
-    - pip install pytest
-    - pip install pytest-django
+    - pip install pytest pytest-django pytest-cov
     - until nc -z postgres 5432; do echo "Waiting for Postgres..."; sleep 1; done
     - python manage.py migrate
     - export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-    - pytest --junitxml=pytest-report.xml
+    - pytest --cov=. --cov-report=xml --junitxml=pytest-report.xml
+    - bash <(curl -s https://codecov.io/bash)
   artifacts:
     when: always
     reports:
       junit: pytest-report.xml
     paths:
       - pytest-report.xml
+      - coverage.xml
