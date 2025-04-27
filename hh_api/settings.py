@@ -6,19 +6,20 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+RUNNING_IN_GITLAB = os.getenv('GITLAB_CI') == 'true'
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost',                  # Allow local development
-    '127.0.0.1',                  # Allow IP-based access in local development
-    'hauntedhotel-backend-api.com',  # Your production backend domain
-    'www.hauntedhotel-backend-api.com',  # Add the 'www' subdomain if applicable
+    'localhost',
+    '127.0.0.1',
+    'hauntedhotel-backend-api.com',
+    'www.hauntedhotel-backend-api.com',
 ]
 
 
@@ -114,8 +115,6 @@ REST_AUTH = {
 }
 
 
-# Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -185,16 +184,30 @@ ASGI_APPLICATION = 'hh_api.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'test_db'),
-        'USER': os.getenv('POSTGRES_USER', 'test_user'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'test_pass'),
-        'HOST': os.getenv('DB_HOST', 'postgres'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+if RUNNING_IN_GITLAB:
+    # GitLab Runner Testing Database
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('POSTGRES_DB', 'test_db'),
+            'USER': os.getenv('POSTGRES_USER', 'test_user'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'test_pass'),
+            'HOST': os.getenv('DB_HOST', 'localhost'),
+            'PORT': os.getenv('DB_PORT', '5432'),
+        }
     }
-}
+else:
+    # Normal Local/Prod Database
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME'),
+            'USER': os.environ.get('DB_USER_NM'),
+            'PASSWORD': os.environ.get('DB_USER_PW'),
+            'HOST': os.environ.get('DB_IP'),
+            'PORT': os.environ.get('DB_PORT'),
+        }
+    }
 
 
 # Password validation
