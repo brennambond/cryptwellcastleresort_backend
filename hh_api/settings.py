@@ -30,7 +30,7 @@ SITE_ID = 1
 WEBSITE_URL = os.getenv("WEBSITE_URL", "http://localhost:8000")
 
 CSRF_TRUSTED_ORIGINS = ['http://35.170.218.30',
-                        'https://hauntedhotel-backend-api.com', 'http://hauntedhotel-backend-api.com', 'https://thecryptwellcastleresort.vercel.app',]
+                        'https://hauntedhotel-backend-api.com', 'http://hauntedhotel-backend-api.com', 'https://thecryptwellcastleresort.vercel.app', 'https://cryptwellcastleresort-backend.onrender.com',]
 
 
 SIMPLE_JWT = {
