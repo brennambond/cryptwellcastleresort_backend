@@ -1,4 +1,5 @@
 import os
+import dj_database_url
 
 from datetime import timedelta
 from pathlib import Path
@@ -184,7 +185,6 @@ ASGI_APPLICATION = 'hh_api.asgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 if RUNNING_IN_GITLAB:
-    # GitLab Runner Testing Database
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -196,16 +196,8 @@ if RUNNING_IN_GITLAB:
         }
     }
 else:
-    # Normal Local/Prod Database
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('DB_NAME'),
-            'USER': os.environ.get('DB_USER_NM'),
-            'PASSWORD': os.environ.get('DB_USER_PW'),
-            'HOST': os.environ.get('DB_IP'),
-            'PORT': os.environ.get('DB_PORT'),
-        }
+        'default': dj_database_url.config(conn_max_age=600)
     }
 
 
