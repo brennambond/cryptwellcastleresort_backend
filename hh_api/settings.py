@@ -18,8 +18,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'hauntedhotel-backend-api.com',
-    'www.hauntedhotel-backend-api.com',
+    'cryptwellcastleresort-backend.onrender.com',
 ]
 
 
@@ -81,9 +80,9 @@ SPECTACULAR_SETTINGS = {
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",                          # Local frontend
-    "https://thecryptwellcastleresort.vercel.app",    # Production frontend
-    "https://hauntedhotel-backend-api.com",           # Backend itself
+    "http://localhost:3000",
+    "https://thecryptwellcastleresort.vercel.app",
+    'cryptwellcastleresort-backend.onrender.com',
 ]
 
 
