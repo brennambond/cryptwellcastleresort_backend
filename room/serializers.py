@@ -1,12 +1,11 @@
 from rest_framework import serializers
 from .models import Wing, Room
-import os
 
 
 class WingSerializer(serializers.ModelSerializer):
-    image_url = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
 
-    def get_image_url(self, obj):
+    def get_image(self, obj):
         request = self.context.get('request')
         if obj.image and hasattr(obj.image, 'url'):
             return request.build_absolute_uri(obj.image.url)
@@ -14,13 +13,13 @@ class WingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Wing
-        fields = ('id', 'name', 'description', 'image_url')
+        fields = ('id', 'name', 'description', 'image')
 
 
 class RoomSerializer(serializers.ModelSerializer):
-    image_url = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
 
-    def get_image_url(self, obj):
+    def get_image(self, obj):
         request = self.context.get('request')
         if obj.image and hasattr(obj.image, 'url'):
             return request.build_absolute_uri(obj.image.url)
@@ -28,5 +27,7 @@ class RoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('id', 'title', 'description', 'price_per_night',
-                  'wing', 'category', 'image_url', 'beds', 'bedrooms', 'bathrooms', 'guests', 'created_at')
+        fields = (
+            'id', 'title', 'description', 'price_per_night', 'wing', 'category',
+            'image', 'beds', 'bedrooms', 'bathrooms', 'guests', 'created_at'
+        )

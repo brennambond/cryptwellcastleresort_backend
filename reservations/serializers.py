@@ -23,7 +23,7 @@ class ReservationSerializer(serializers.ModelSerializer):
                 "id": obj.room.id,
                 "title": obj.room.title,
                 "price_per_night": obj.room.price_per_night,
-                "image_url": obj.room.image_url,  # Use image_url directly
+                "image": obj.room.image,
                 "beds": obj.room.beds,
                 "bedrooms": obj.room.bedrooms,
                 "bathrooms": obj.room.bathrooms,
