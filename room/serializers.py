@@ -7,10 +7,10 @@ class WingSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
 
     def get_image_url(self, obj):
-        bucket_domain = os.getenv(
-            "AWS_S3_CUSTOM_DOMAIN", "hauntedhotel-backend-bucket.s3.us-east-1.amazonaws.com"
-        )
-        return f"https://{bucket_domain}/{obj.image_url.name}" if obj.image_url else None
+        request = self.context.get('request')
+        if obj.image and hasattr(obj.image, 'url'):
+            return request.build_absolute_uri(obj.image.url)
+        return None
 
     class Meta:
         model = Wing
@@ -21,15 +21,9 @@ class RoomSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
 
     def get_image_url(self, obj):
-        bucket_domain = os.getenv(
-            "AWS_S3_CUSTOM_DOMAIN", "hauntedhotel-backend-bucket.s3.us-east-1.amazonaws.com"
-        )
-        if obj.image and obj.image.name:
-            image_url = f"https://{bucket_domain}/{obj.image.name}"
-            # Debugging
-            print(f"Serialized Image URL for {obj.title}: {image_url}")
-            return image_url
-        print(f"No image for {obj.title}, returning None")  # Debugging
+        request = self.context.get('request')
+        if obj.image and hasattr(obj.image, 'url'):
+            return request.build_absolute_uri(obj.image.url)
         return None
 
     class Meta:

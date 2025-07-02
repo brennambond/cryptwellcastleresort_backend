@@ -8,17 +8,16 @@ class Wing(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     description = models.TextField()
-    image_url = models.ImageField(
+    image = models.ImageField(
         upload_to='uploads/wings', default='uploads/default-wing.png', null=True, blank=True
     )
 
     def save(self, *args, **kwargs):
-        # Dynamically construct the image_url
-        if self.image_url:
-            bucket_domain = os.getenv(
-                "AWS_S3_CUSTOM_DOMAIN", "hauntedhotel-backend-bucket.s3.us-east-1.amazonaws.com"
-            )
-            self.image_url_full = f"https://{bucket_domain}/{self.image_url.name}"
+        # Don't manually build image_url anymore
+        if self.image and self.image.name:
+            self.image_url = self.image.url  # Keep it synced if you must keep the field
+        else:
+            self.image_url = None
         super().save(*args, **kwargs)
 
     def __str__(self):
