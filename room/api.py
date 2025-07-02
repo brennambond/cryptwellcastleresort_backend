@@ -25,7 +25,6 @@ def list_rooms(request):
         'title'
     )
 
-    # Apply filtering
     guests = request.query_params.get('guests')
     beds = request.query_params.get('beds')
     bedrooms = request.query_params.get('bedrooms')
@@ -49,7 +48,7 @@ def list_rooms(request):
         ).values_list('room_id', flat=True)
         rooms = rooms.exclude(id__in=reservations)
 
-    serializer = RoomSerializer(rooms, many=True)
+    serializer = RoomSerializer(rooms, many=True, context={"request": request})
     return Response(serializer.data)
 
 
