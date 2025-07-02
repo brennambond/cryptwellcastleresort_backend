@@ -237,28 +237,28 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_URL = '/static/'
+STATICFILES_DIRS = os.path.join(BASE_DIR, 'static')
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_AKI')
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SAK')
+# AWS_ACCESS_KEY_ID = os.environ.get('AWS_AKI')
+# AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SAK')
 
-AWS_STORAGE_BUCKET_NAME = os.environ.get(
-    'AWS_SBN', "hauntedhotel-backend-bucket")
-print("AWS_STORAGE_BUCKET_NAME:", AWS_STORAGE_BUCKET_NAME)
-AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.us-east-1.amazonaws.com"
-print("AWS_S3_CUSTOM_DOMAIN:", AWS_S3_CUSTOM_DOMAIN)
+# AWS_STORAGE_BUCKET_NAME = os.environ.get(
+#     'AWS_SBN', "hauntedhotel-backend-bucket")
+# print("AWS_STORAGE_BUCKET_NAME:", AWS_STORAGE_BUCKET_NAME)
+# AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.us-east-1.amazonaws.com"
+# print("AWS_S3_CUSTOM_DOMAIN:", AWS_S3_CUSTOM_DOMAIN)
 
-AWS_S3_FILE_OVERWRITE = True
+# AWS_S3_FILE_OVERWRITE = True
 
 STORAGES = {
     "default": {
