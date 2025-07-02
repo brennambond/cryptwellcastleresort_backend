@@ -7,9 +7,9 @@ class WingSerializer(serializers.ModelSerializer):
 
     def get_image(self, obj):
         request = self.context.get('request')
-        if obj.image and hasattr(obj.image, 'url'):
-            return request.build_absolute_uri(obj.image.url)
-        return None
+        if request is None:
+            return obj.image.url
+        return request.build_absolute_uri(obj.image.url)
 
     class Meta:
         model = Wing
@@ -28,6 +28,7 @@ class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = (
-            'id', 'title', 'description', 'price_per_night', 'wing', 'category',
-            'image', 'beds', 'bedrooms', 'bathrooms', 'guests', 'created_at'
+            'id', 'title', 'description', 'price_per_night',
+            'wing', 'category', 'image', 'beds', 'bedrooms',
+            'bathrooms', 'guests', 'created_at'
         )

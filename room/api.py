@@ -64,7 +64,7 @@ def get_room_detail(request, room_id):
 @permission_classes([AllowAny])
 def list_wings(request):
     wings = Wing.objects.all()
-    serializer = WingSerializer(wings, many=True)
+    serializer = WingSerializer(wings, many=True, context={'request': request})
     return Response(serializer.data)
 
 

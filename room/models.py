@@ -7,7 +7,10 @@ class Wing(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     image = models.ImageField(
-        upload_to='uploads/wings', default='uploads/default-wing.png', null=True, blank=True
+        upload_to='uploads/wings',
+        default='uploads/default-wing.png',
+        null=True,
+        blank=True
     )
 
     def __str__(self):
@@ -33,7 +36,8 @@ class Room(models.Model):
     bathrooms = models.PositiveIntegerField(default=1)
     guests = models.PositiveIntegerField(default=1)
     image = models.ImageField(
-        upload_to="uploads/rooms/", default="uploads/default-room.png"
+        upload_to="uploads/rooms/",
+        default="uploads/default-room.png"
     )
     wing = models.ForeignKey(
         Wing, on_delete=models.CASCADE, related_name='rooms')
