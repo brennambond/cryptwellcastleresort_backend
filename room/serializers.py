@@ -7,10 +7,11 @@ class WingSerializer(serializers.ModelSerializer):
 
     def get_image(self, obj):
         request = self.context.get('request')
-        if request and obj.image:
-            return request.build_absolute_uri(obj.image.url)
-        elif obj.image:
-            return obj.image.url
+        if obj.image:
+            image_url = obj.image.url
+            if request:
+                return request.build_absolute_uri(image_url)
+            return image_url
         return None
 
     class Meta:
@@ -23,10 +24,11 @@ class RoomSerializer(serializers.ModelSerializer):
 
     def get_image(self, obj):
         request = self.context.get('request')
-        if request and obj.image:
-            return request.build_absolute_uri(obj.image.url)
-        elif obj.image:
-            return obj.image.url
+        if obj.image:
+            image_url = obj.image.url
+            if request:
+                return request.build_absolute_uri(image_url)
+            return image_url
         return None
 
     class Meta:
