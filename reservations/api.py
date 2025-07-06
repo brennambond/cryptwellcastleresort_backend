@@ -13,8 +13,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# Helper function
-
 
 def validate_dates(check_in, check_out):
     try:
@@ -36,9 +34,8 @@ def validate_dates(check_in, check_out):
 def list_user_reservations(request):
     try:
         reservations = Reservation.objects.filter(user=request.user)
-        logger.info(
-            f"Fetched reservations for user {request.user}: {reservations}")
-        serializer = ReservationSerializer(reservations, many=True)
+        serializer = ReservationSerializer(
+            reservations, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:
         logger.error(f"Error fetching reservations: {e}", exc_info=True)
@@ -51,9 +48,8 @@ def get_reservation(request, reservation_id):
     try:
         reservation = get_object_or_404(
             Reservation, id=reservation_id, user=request.user)
-        logger.info(
-            f"Fetched reservation {reservation_id} for user {request.user}.")
-        serializer = ReservationSerializer(reservation)
+        serializer = ReservationSerializer(
+            reservation, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:
         logger.error(f"Error fetching reservation: {e}", exc_info=True)
@@ -64,39 +60,33 @@ def get_reservation(request, reservation_id):
 @permission_classes([IsAuthenticated])
 def create_reservation(request):
     try:
-        room_id = request.data.get('room_id')
-        check_in = request.data.get('check_in')
-        check_out = request.data.get('check_out')
-        guests = request.data.get('guests')
-        total_price = request.data.get('total_price')
+        data = request.data.copy()
+        room_id = data.get('room')
 
-        if not all([room_id, check_in, check_out, guests, total_price]):
-            return Response({'error': 'Missing fields in request.'}, status=status.HTTP_400_BAD_REQUEST)
+        if not room_id:
+            return Response({'error': 'Missing room ID.'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             room = Room.objects.get(id=room_id)
         except Room.DoesNotExist:
             return Response({'error': 'Room not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-        reservation = Reservation.objects.create(
-            user=request.user,
-            room=room,
-            check_in=check_in,
-            check_out=check_out,
-            guests=guests,
-            total_price=total_price
-        )
+        data['user'] = request.user.id
+        data['room'] = room.id
+
+        validate_dates(data.get('check_in'), data.get('check_out'))
 
         serializer = ReservationSerializer(
-            data=request.data, context={'request': request})
+            data=data, context={'request': request})
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user=request.user, room=room)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            print("Validation Errors:", serializer.errors)
-            return Response({'error': 'Missing fields in request.', 'details': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            logger.warning(f"Validation failed: {serializer.errors}")
+            return Response({'error': 'Validation failed.', 'details': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     except Exception as e:
+        logger.error(f"Error creating reservation: {e}", exc_info=True)
         return Response({'error': 'An error occurred during reservation creation.', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -104,7 +94,6 @@ def create_reservation(request):
 @permission_classes([IsAuthenticated])
 def update_reservation(request, reservation_id):
     try:
-        logger.info(f"Updating reservation {reservation_id}.")
         reservation = get_object_or_404(
             Reservation, id=reservation_id, user=request.user)
         data = request.data
@@ -118,8 +107,8 @@ def update_reservation(request, reservation_id):
         validate_dates(reservation.check_in, reservation.check_out)
 
         reservation.save()
-        serializer = ReservationSerializer(reservation)
-        logger.info(f"Reservation updated successfully: {serializer.data}")
+        serializer = ReservationSerializer(
+            reservation, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:
         logger.error(f"Error updating reservation: {e}", exc_info=True)
@@ -131,9 +120,9 @@ def update_reservation(request, reservation_id):
 def delete_reservation(request, reservation_id):
     try:
         reservation = get_object_or_404(
-            Reservation, id=reservation_id, user=request.user
-        )
+            Reservation, id=reservation_id, user=request.user)
         reservation.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
+        logger.error(f"Error deleting reservation: {e}", exc_info=True)
         return Response({"error": "An error occurred while deleting the reservation."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
