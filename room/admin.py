@@ -5,15 +5,15 @@ from .models import Wing, Category, Room
 
 @admin.register(Wing)
 class WingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description', 'preview_image')
+    list_display = ('id', 'name', 'description', 'preview_image', 'image_url')
     search_fields = ('name',)
 
     def preview_image(self, obj):
-        if obj.image:
-            return format_html('<img src="{}" width="100" height="auto" />', obj.image.url)
-        return "No image"
+        if obj.image_url:
+            return format_html('<img src="{}" width="200" height="auto" />', obj.image_url)
+        return "(No image)"
 
-    preview_image.short_description = "Image"
+    preview_image.short_description = "Preview"
 
 
 @admin.register(Category)
@@ -26,7 +26,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class RoomAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'title', 'price_per_night', 'wing', 'category',
-        'beds', 'bedrooms', 'bathrooms', 'guests', 'created_at', 'preview_image'
+        'beds', 'bedrooms', 'bathrooms', 'guests', 'created_at', 'preview_image', 'image_url'
     )
     list_filter = ('wing', 'category')
     search_fields = (
@@ -35,8 +35,8 @@ class RoomAdmin(admin.ModelAdmin):
     )
 
     def preview_image(self, obj):
-        if obj.image:
-            return format_html('<img src="{}" width="100" height="auto" />', obj.image.url)
-        return "No image"
+        if obj.image_url:
+            return format_html('<img src="{}" width="200" height="auto" />', obj.image_url)
+        return "(No image)"
 
-    preview_image.short_description = "Image"
+    preview_image.short_description = "Preview"

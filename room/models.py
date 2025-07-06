@@ -6,12 +6,7 @@ class Wing(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     description = models.TextField()
-    image = models.ImageField(
-        upload_to='uploads/wings',
-        default='uploads/default-wing.png',
-        null=True,
-        blank=True
-    )
+    image_url = models.URLField(max_length=500, blank=True)
 
     def __str__(self):
         return self.name
@@ -35,10 +30,7 @@ class Room(models.Model):
     bedrooms = models.PositiveIntegerField(default=1)
     bathrooms = models.PositiveIntegerField(default=1)
     guests = models.PositiveIntegerField(default=1)
-    image = models.ImageField(
-        upload_to="uploads/rooms/",
-        default="uploads/default-room.png"
-    )
+    image_url = models.URLField(max_length=500, blank=True)
     wing = models.ForeignKey(
         Wing, on_delete=models.CASCADE, related_name='rooms')
     category = models.ForeignKey(
