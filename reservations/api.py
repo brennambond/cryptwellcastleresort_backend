@@ -64,22 +64,19 @@ def get_reservation(request, reservation_id):
 @permission_classes([IsAuthenticated])
 def create_reservation(request):
     try:
-        data = request.data
-        room_id = data.get('room')
-        check_in = data.get('check_in')
-        check_out = data.get('check_out')
-        guests = data.get('guests', 1)
-        total_price = data.get('total_price', 0.00)
+        room_id = request.data.get('room_id')
+        check_in = request.data.get('check_in')
+        check_out = request.data.get('check_out')
+        guests = request.data.get('guests')
+        total_price = request.data.get('total_price')
 
-        logger.info(f"Request data: {data}")
+        if not all([room_id, check_in, check_out, guests, total_price]):
+            return Response({'error': 'Missing fields in request.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if not all([check_in, check_out, room_id, total_price]) or int(guests) <= 0:
-            logger.error("Missing or invalid required fields.")
-            return Response({"error": "Missing or invalid required fields."}, status=status.HTTP_400_BAD_REQUEST)
-
-        validate_dates(check_in, check_out)
-
-        room = get_object_or_404(Room, id=room_id)
+        try:
+            room = Room.objects.get(id=room_id)
+        except Room.DoesNotExist:
+            return Response({'error': 'Room not found.'}, status=status.HTTP_404_NOT_FOUND)
 
         reservation = Reservation.objects.create(
             user=request.user,
@@ -87,14 +84,15 @@ def create_reservation(request):
             check_in=check_in,
             check_out=check_out,
             guests=guests,
-            total_price=total_price,
+            total_price=total_price
         )
-        serializer = ReservationSerializer(reservation)
+
+        serializer = ReservationSerializer(
+            reservation, context={'request': request})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     except Exception as e:
-        logger.error(f"Error during reservation creation: {e}", exc_info=True)
-        return Response({"error": "An error occurred during reservation creation."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'error': 'An error occurred during reservation creation.', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['PUT'])
