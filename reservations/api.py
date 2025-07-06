@@ -88,8 +88,13 @@ def create_reservation(request):
         )
 
         serializer = ReservationSerializer(
-            reservation, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+            data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            print("Validation Errors:", serializer.errors)
+            return Response({'error': 'Missing fields in request.', 'details': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     except Exception as e:
         return Response({'error': 'An error occurred during reservation creation.', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
